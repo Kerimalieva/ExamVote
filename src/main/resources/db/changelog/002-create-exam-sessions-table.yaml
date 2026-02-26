@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: student
+      changes:
+        - createTable:
+            tableName: exam_sessions
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: RANDOM_UUID()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: exam_name
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(1000)  # Изменено с TEXT на VARCHAR
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: open_time
+                  type: TIMESTAMP
+              - column:
+                  name: close_time
+                  type: TIMESTAMP
+              - column:
+                  name: created_by
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_exam_sessions_created_by
+                    references: users(id)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP

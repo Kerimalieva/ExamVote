@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: student
+      changes:
+        - createTable:
+            tableName: options
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: RANDOM_UUID()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: question_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_options_question
+                    references: questions(id)
+              - column:
+                  name: option_text
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: option_order
+                  type: INTEGER
+                  constraints:
+                    nullable: false

@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: student
+      changes:
+        - createTable:
+            tableName: votes
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: RANDOM_UUID()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: session_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: question_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: option_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: student_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ip_address
+                  type: VARCHAR(45)
+              - column:
+                  name: user_agent
+                  type: VARCHAR(500)
+              - column:
+                  name: vote_hash
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vote_timestamp
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        - addForeignKeyConstraint:
+            baseTableName: votes
+            baseColumnNames: session_id
+            referencedTableName: exam_sessions
+            referencedColumnNames: id
+            constraintName: fk_votes_session
+        - addForeignKeyConstraint:
+            baseTableName: votes
+            baseColumnNames: question_id
+            referencedTableName: questions
+            referencedColumnNames: id
+            constraintName: fk_votes_question
+        - addForeignKeyConstraint:
+            baseTableName: votes
+            baseColumnNames: option_id
+            referencedTableName: options
+            referencedColumnNames: id
+            constraintName: fk_votes_option
+        - addForeignKeyConstraint:
+            baseTableName: votes
+            baseColumnNames: student_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_votes_student
+        - addUniqueConstraint:
+            tableName: votes
+            columnNames: session_id, student_id, question_id
+            constraintName: uk_votes_session_student_question

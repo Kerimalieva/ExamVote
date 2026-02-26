@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - include:
+      file: classpath:db/changelog/001-create-users-table.yaml
+  - include:
+      file: classpath:db/changelog/002-create-exam-sessions-table.yaml
+  - include:
+      file: classpath:db/changelog/003-create-questions-table.yaml
+  - include:
+      file: classpath:db/changelog/004-create-options-table.yaml
+  - include:
+      file: classpath:db/changelog/005-create-votes-table.yaml
+  - include:
+      file: classpath:db/changelog/006-insert-admin-user.yaml
+  - include:
+      file: classpath:db/changelog/007-add-correct-option-to-questions.yaml

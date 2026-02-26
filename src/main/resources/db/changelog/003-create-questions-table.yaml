@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: student
+      changes:
+        - createTable:
+            tableName: questions
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: RANDOM_UUID()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: session_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_questions_session
+                    references: exam_sessions(id)
+              - column:
+                  name: question_text
+                  type: VARCHAR(1000)  # Изменено с TEXT на VARCHAR
+                  constraints:
+                    nullable: false
+              - column:
+                  name: question_order
+                  type: INTEGER
+                  constraints:
+                    nullable: false
