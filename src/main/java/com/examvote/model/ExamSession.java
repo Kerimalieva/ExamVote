@@ -1,8 +1,7 @@
 package com.examvote.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,8 +10,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "exam_sessions")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString(exclude = {"questions", "createdBy"})
 public class ExamSession {
 
     @Id

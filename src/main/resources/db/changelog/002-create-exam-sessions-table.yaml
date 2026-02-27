@@ -9,7 +9,7 @@ databaseChangeLog:
               - column:
                   name: id
                   type: UUID
-                  defaultValueComputed: RANDOM_UUID()
+                  defaultValueComputed: gen_random_uuid()  # Изменено для PostgreSQL
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -20,7 +20,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: description
-                  type: VARCHAR(1000)  # Изменено с TEXT на VARCHAR
+                  type: TEXT
               - column:
                   name: status
                   type: VARCHAR(20)
@@ -37,9 +37,13 @@ databaseChangeLog:
                   type: UUID
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_exam_sessions_created_by
-                    references: users(id)
               - column:
                   name: created_at
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
+        - addForeignKeyConstraint:
+            baseTableName: exam_sessions
+            baseColumnNames: created_by
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_exam_sessions_created_by

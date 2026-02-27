@@ -2,7 +2,9 @@ package com.examvote.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +12,9 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "questions")
-@Data
 @NoArgsConstructor
+@Getter
+@Setter
 public class Question {
 
     @Id

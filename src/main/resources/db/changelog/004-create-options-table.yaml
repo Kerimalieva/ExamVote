@@ -9,7 +9,7 @@ databaseChangeLog:
               - column:
                   name: id
                   type: UUID
-                  defaultValueComputed: RANDOM_UUID()
+                  defaultValueComputed: gen_random_uuid()  # Изменено для PostgreSQL
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -18,8 +18,6 @@ databaseChangeLog:
                   type: UUID
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_options_question
-                    references: questions(id)
               - column:
                   name: option_text
                   type: VARCHAR(255)
@@ -30,3 +28,9 @@ databaseChangeLog:
                   type: INTEGER
                   constraints:
                     nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: options
+            baseColumnNames: question_id
+            referencedTableName: questions
+            referencedColumnNames: id
+            constraintName: fk_options_question

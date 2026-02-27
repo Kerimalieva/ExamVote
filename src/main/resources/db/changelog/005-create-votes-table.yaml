@@ -9,7 +9,7 @@ databaseChangeLog:
               - column:
                   name: id
                   type: UUID
-                  defaultValueComputed: RANDOM_UUID()
+                  defaultValueComputed: gen_random_uuid()  # Изменено для PostgreSQL
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -38,7 +38,7 @@ databaseChangeLog:
                   type: VARCHAR(45)
               - column:
                   name: user_agent
-                  type: VARCHAR(500)
+                  type: TEXT
               - column:
                   name: vote_hash
                   type: VARCHAR(64)

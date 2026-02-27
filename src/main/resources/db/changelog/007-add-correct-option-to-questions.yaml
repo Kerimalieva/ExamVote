@@ -3,12 +3,9 @@ databaseChangeLog:
       id: 7
       author: student
       changes:
-        - addColumn:
-            tableName: questions
-            columns:
-              - column:
-                  name: correct_option_id
-                  type: UUID
-                  constraints:
-                    foreignKeyName: fk_questions_correct_option
-                    references: options(id)
+        - addForeignKeyConstraint:
+            baseTableName: questions
+            baseColumnNames: correct_option_id
+            referencedTableName: options
+            referencedColumnNames: id
+            constraintName: fk_questions_correct_option
