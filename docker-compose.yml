@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: examvote-postgres
+    environment:
+      POSTGRES_DB: examvotedb
+      POSTGRES_USER: examuser
+      POSTGRES_PASSWORD: exam123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - examvote-network
+
+  app:
+    build: .
+    container_name: examvote-app
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/examvotedb
+      SPRING_DATASOURCE_USERNAME: examuser
+      SPRING_DATASOURCE_PASSWORD: exam123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+    ports:
+      - "8090:8090"
+    networks:
+      - examvote-network
+
+volumes:
+  postgres_data:
+
+networks:
+  examvote-network:
+    driver: bridge
