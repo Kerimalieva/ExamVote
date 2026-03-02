@@ -1,0 +1,10 @@
+.option-item.highlight-correct {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    transition: background-color 0.3s ease;
+}
+
+.option-item .correct-option:checked + label {
+    font-weight: bold;
+    color: #155724;
+}

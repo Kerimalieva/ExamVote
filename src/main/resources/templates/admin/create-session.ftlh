@@ -42,9 +42,9 @@
                     <!-- Questions will be added here dynamically -->
                 </div>
 
-                <button type="button" class="btn btn-outline-primary mt-3" onclick="addQuestion()">
-                    <i class="fas fa-plus"></i> Add Question
-                </button>
+<#--                <button type="button" class="btn btn-outline-primary mt-3" onclick="addQuestion()">-->
+<#--                    <i class="fas fa-plus"></i> Add Question-->
+<#--                </button>-->
             </div>
 
             <hr class="my-4">
@@ -63,11 +63,21 @@
 
 <script>
     let questionCount = 0;
+    // Храним уникальные ID для каждого вопроса
+    let questionUniqueIds = [];
+
+    function generateUniqueId() {
+        return 'q_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
 
     function addQuestion() {
         const container = document.getElementById('questionsContainer');
+        const uniqueId = generateUniqueId();
+        questionUniqueIds.push(uniqueId);
+
         const questionDiv = document.createElement('div');
         questionDiv.className = 'card mb-3 question-card';
+        questionDiv.dataset.uniqueId = uniqueId;
         questionDiv.dataset.index = questionCount;
 
         questionDiv.innerHTML = `
@@ -113,6 +123,7 @@
     function addOption(questionDiv) {
         const optionsContainer = questionDiv.querySelector('.options-container');
         const optionIndex = optionsContainer.children.length;
+        const uniqueId = questionDiv.dataset.uniqueId;
 
         const optionDiv = document.createElement('div');
         optionDiv.className = 'input-group mb-2 option-item';
@@ -121,7 +132,7 @@
         <input type="text" class="form-control option-text"
                placeholder="Option ${optionIndex + 1}" required>
         <div class="input-group-text">
-            <input type="radio" name="correct_${questionDiv.dataset.index}" class="correct-option">
+            <input type="radio" name="correct_${uniqueId}" class="correct-option">
             <label class="ms-1">Correct</label>
         </div>
         <button type="button" class="btn btn-outline-danger remove-option-btn">
@@ -144,6 +155,9 @@
 
         // Обновляем плейсхолдеры
         updateOptionPlaceholders(questionDiv);
+
+        // Добавляем подсветку выбранного правильного ответа
+        highlightCorrectOption(questionDiv);
     }
 
     function updateOptionPlaceholders(questionDiv) {
@@ -157,6 +171,12 @@
         if (confirm('Are you sure you want to remove this question?')) {
             const questionDiv = button.closest('.question-card');
             if (document.querySelectorAll('.question-card').length > 1) {
+                // Удаляем уникальный ID из массива
+                const uniqueId = questionDiv.dataset.uniqueId;
+                const index = questionUniqueIds.indexOf(uniqueId);
+                if (index > -1) {
+                    questionUniqueIds.splice(index, 1);
+                }
                 questionDiv.remove();
                 updateQuestionIndices();
             } else {
@@ -172,10 +192,34 @@
             const header = question.querySelector('.card-header h5');
             header.textContent = `Question ${index + 1}`;
 
-            // Обновляем name у радио-кнопок
-            const radios = question.querySelectorAll('.correct-option');
-            radios.forEach(radio => {
-                radio.name = `correct_${index}`;
+            // НЕ обновляем name у радио-кнопок - они должны оставаться с уникальными ID
+            // Радио-кнопки остаются с уникальными именами на основе dataset.uniqueId
+
+            // Добавляем проверку, что уникальный ID не потерян
+            if (!question.dataset.uniqueId) {
+                console.warn('Question missing uniqueId, generating new one');
+                question.dataset.uniqueId = generateUniqueId();
+            }
+        });
+    }
+
+    function highlightCorrectOption(questionDiv) {
+        const radios = questionDiv.querySelectorAll('.correct-option');
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Убираем подсветку у всех опций в этом вопросе
+                const allOptions = questionDiv.querySelectorAll('.option-item');
+                allOptions.forEach(opt => {
+                    opt.style.backgroundColor = '';
+                    opt.classList.remove('highlight-correct');
+                });
+
+                // Подсвечиваем выбранную опцию
+                if (this.checked) {
+                    const optionItem = this.closest('.option-item');
+                    optionItem.style.backgroundColor = '#d4edda';
+                    optionItem.classList.add('highlight-correct');
+                }
             });
         });
     }
@@ -265,6 +309,9 @@
             examData.questions.push(questionObj);
         });
 
+        // Опционально: валидация данных перед отправкой
+        console.log('Exam data to send:', examData);
+
         // Показываем индикатор загрузки
         const submitBtn = document.getElementById('submitBtn');
         const originalText = submitBtn.innerHTML;
@@ -335,6 +382,14 @@
     .btn-success:disabled {
         opacity: 0.6;
         cursor: not-allowed;
+    }
+    .option-item.highlight-correct {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+    .option-item .correct-option:checked + label {
+        font-weight: bold;
+        color: #155724;
     }
 </style>
 
